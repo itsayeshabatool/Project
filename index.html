@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>과제 관리 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            border-radius: 18px;
+        }
+
+        .nav-tab.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #1c82e7 ;
+        }
+
+        .submit-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .assignment-info {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .task-card {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            background: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #ddd;
+            flex-shrink: 0;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 15px;
+            color: #222;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .user-meta {
+            color: #888;
+            font-size: 14px;
+        }
+        .user-meta b {
+            color: #222;
+            font-weight: bold;
+        }
+
+        .task-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .task-date {
+            color: #999;
+        }
+
+        .score-horizontal {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .score-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 110px;
+        }
+
+        .score-label {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .grade-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .grade-btn {
+            width: 32px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .grade-btn.selected {
+            background: #6a89b9;
+            color: #fff;
+            border-color: #4285f4;
+        }
+
+        .total-row {
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+
+        .total-section {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .status-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-blue {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-red {
+            background: rgb(255, 71, 71);
+            color: white;
+        }
+
+        .badge-green {
+            background: rgb(101, 163, 255);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-tabs">
+            <button class="nav-tab">채점</button>
+            <button class="nav-tab">과제</button>
+            <button class="nav-tab">채점기준</button>
+            <button class="nav-tab active">과제</button>
+            <button class="nav-tab">학습자료</button>
+        </div>
+        <button class="submit-btn">제출</button>
+    </div>
+
+    <div class="content">
+        <div class="assignment-header">
+            <div>
+                <h3>3차시 과제 수</h3>
+                <div class="assignment-info">
+                    <span>총 3개</span>
+                </div>
+            </div>
+            <div class="assignment-info">
+                <span>과제 내용 수정하기</span>
+                <span>과제 추가하기</span>
+            </div>
+        </div>
+
+        <!-- Task Card 1 -->
+        <div class="task-card">
+            <div class="task-header">
+                <div class="profile-pic">
+                    <img src="box.png" alt="">
+                </div>
+                <div class="user-info">
+                    <span class="user-name"><strong>홍길동</strong></span>
+                    <span class="user-meta">생년월일 <b>1980.01.23</b></span>
+                    <span class="user-meta">현재 등급 <b>1월 12급</b></span>
+                </div>
+                <div class="status-badges">
+                    <span class="badge badge-blue">승인</span>
+                    <span class="badge badge-green">보기</span>
+                </div>
+            </div>
+
+            <div class="score-horizontal">
+                <div class="score-col">
+                    <div class="score-label">기본 동작</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">통제</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">거부기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">태도</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                                <div class="score-col">
+                    <div class="score-label">출석기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Card 2 -->
+        <div class="task-card">
+            <div class="task-header">
+                <div class="profile-pic">
+                    <img src="box.png" alt="">
+                </div>
+                <div class="user-info">
+                    <span class="user-name"><strong>홍길동</strong></span>
+                    <span class="user-meta">생년월일 <b>1980.01.23</b></span>
+                    <span class="user-meta">현재 등급 <b>1월 12급</b></span>
+                </div>
+                <div class="status-badges">
+                    <span class="badge badge-blue">승인</span>
+                    <span class="badge badge-red">승인</span>
+                </div>
+            </div>
+
+            <div class="score-horizontal">
+                <div class="score-col">
+                    <div class="score-label">기본 동작</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">통제</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">거부기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">태도</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                                <div class="score-col">
+                    <div class="score-label">출석기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Card 3 -->
+        <div class="task-card">
+            <div class="task-header">
+                <div class="profile-pic">
+                    <img src="box.png" alt="">
+                </div>
+                <div class="user-info">
+                    <span class="user-name"><strong>홍길동</strong></span>
+                    <span class="user-meta">생년월일 <b>1980.01.23</b></span>
+                    <span class="user-meta">현재 등급 <b>1월 12급</b></span>
+                </div>
+                <div class="status-badges">
+                    <span class="badge badge-blue">승인</span>
+                    <span class="badge badge-red">승인</span>
+                </div>
+            </div>
+
+            <div class="score-horizontal">
+                <div class="score-col">
+                    <div class="score-label">기본 동작</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                    
+                </div>
+                <div class="score-col">
+                    <div class="score-label">통제</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">거부기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">태도</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+                <div class="score-col">
+                    <div class="score-label">출석기</div>
+                    <div class="grade-options">
+                        <button class="grade-btn selected">A</button>
+                        <button class="grade-btn">B</button>
+                        <button class="grade-btn">C</button>
+                        <button class="grade-btn">D</button>
+                        <button class="grade-btn">F</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
